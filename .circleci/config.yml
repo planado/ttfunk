@@ -11,9 +11,17 @@ jobs:
       - image: "circleci/<< parameters.with >>"
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-ttfunk-<< parameters.with >>-{{ checksum "ttfunk.gemspec" }}
+            - v1-ttfunk-<< parameters.with >>
       - run:
           name: Bundle
           command: "bundle install --jobs=4 --retry=3 --path ~/bundle"
+      - save_cache:
+          key: v1-ttfunk-<< parameters.with >>-{{ checksum "ttfunk.gemspec" }}
+          paths:
+            - ~/bundle
       - run:
           name: Test
           command: "bundle exec rake"
