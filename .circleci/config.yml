@@ -11,17 +11,12 @@ jobs:
       - image: "circleci/<< parameters.with >>"
     steps:
       - checkout
-      #- restore_cache:
-      #    keys:
-      #      - gem-dependencies-<< parameters.with >>-{{ checksum "ttfunk.gemspec" }}
-      #      # fallback to using the latest cache if no exact match is found
-      #      - gem-dependencies-
-      - run: "bundle install --jobs=4 --retry=3 --path ~/bundle"
-      - save_cache:
-          paths:
-            - ~/bundle
-          key: gem-dependencies-<< parameters.with >>-{{ checksum "ttfunk.gemspec" }}
-      - run: "bundle exec rake"
+      - run:
+          name: Bundle
+          command: "bundle install --jobs=4 --retry=3 --path ~/bundle"
+      - run:
+          name: Test
+          command: "bundle exec rake"
 workflows:
   version: 2
   test-2.6.3:
